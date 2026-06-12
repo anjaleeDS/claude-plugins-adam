@@ -1,32 +1,44 @@
 # claude-plugins
 
-Public Claude Code and Codex plugins for personal operating-system workflows.
+[![CI](https://github.com/adzuci/claude-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/adzuci/claude-plugins/actions/workflows/ci.yml)
+[![GitHub Pages](https://img.shields.io/badge/site-GitHub%20Pages-2359d1)](https://adzuci.github.io/claude-plugins/)
 
-The first plugin in this repo is `memory`, a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions.
+Public Claude Code and Codex plugins for local-first AI workflows.
+
+The first plugin in this repo is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions.
+
+**Read the companion post:** [Memory as reliability practice](https://adzuci.github.io/claude-plugins/)
+
+![Memory setup architecture](docs/assets/memory-system-diagram.svg)
+
+## Why This Exists
+
+AI sessions can be useful in the moment and still disappear as soon as the thread ends. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision, but the useful context stayed trapped in a transcript.
+
+`memory` is a small attempt to make that context durable without making it mysterious:
+
+- Obsidian for plain Markdown that stays inspectable
+- git for auditable history
+- explicit setup gates before anything writes to dotfiles
+- Claude Code session capture as the first-class path
+- compatibility notes for Codex and Antigravity so the memory belongs to the person, not one assistant
+
+The goal is not a grand second-brain system. The goal is lower re-orientation cost: fewer repeated explanations, fewer lost decisions, and a clearer trail from “we figured this out” to “we can reuse this later.”
+
+## What the `memory` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/memory:memory-setup` | Set up an Obsidian-backed memory vault with Claude Code session capture and optional Codex/Antigravity importers. |
+
+The default Claude Code path sets up:
+
+- a local Obsidian vault under a user-selected parent directory
+- `claudian` and `obsidian-git` as Obsidian community plugins
+- a `SessionEnd` hook in `~/.claude/settings.json`
+- a managed memory block in `~/.claude/CLAUDE.md`
 
 Current support note: the setup flow has been tested on macOS. Linux and Windows compatibility reports and PRs are very welcome.
-
-## Why I Made This
-
-I kept running into the same problem: AI sessions were useful in the moment, but the important parts were scattered across chats, local transcripts, repo state, and whatever I happened to remember later.
-
-That is fine for one-off help. It is bad for real work. The value of an assistant compounds only when it can retain the shape of your projects, preferences, decisions, and recurring failure modes. Without a memory layer, every new session pays a tax: rediscover the project, restate the preferences, reconstruct the path, and hope nothing subtle was lost.
-
-This skill is my attempt to make that memory layer boring and local:
-
-- Use Obsidian because plain Markdown is inspectable and portable
-- Use git because history should be auditable
-- Use session-end capture because the best time to summarize is when the work is still warm
-- Use explicit gates because tools that write to dotfiles should earn permission every step of the way
-- Support more than one coding assistant because the memory should belong to the person, not the vendor
-
-The goal is not to build a second brain for its own sake. The goal is to reduce re-orientation cost and make good context reusable.
-
-## Plugins
-
-| Plugin | Skill | Purpose |
-| --- | --- | --- |
-| `memory` | `/memory:memory-setup` | Set up an Obsidian-backed memory vault with Claude Code session capture and optional Codex/Antigravity importers. |
 
 ## Install
 
@@ -56,6 +68,24 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
+## Safety Model
+
+This skill is intentionally cautious because it touches personal knowledge and local configuration.
+
+- It explains the trade-offs before setup.
+- It runs read-only preflight checks first.
+- It asks before installing Obsidian.
+- It backs up settings before editing.
+- It keeps generated memory in plain Markdown.
+- It is designed to be rerunnable and idempotent where possible.
+
+The repo includes CI for the bundled Python scripts and plugin metadata:
+
+- compile all memory setup scripts and tests
+- run the pytest suite on Python 3.9 and 3.12
+- validate marketplace and plugin JSON
+- verify the static site references existing assets
+
 ## Repository Structure
 
 ```text
@@ -64,6 +94,12 @@ Then invoke the setup skill:
 .agents/
   plugins/
     marketplace.json
+.github/
+  workflows/
+    ci.yml
+docs/
+  index.html
+  assets/
 plugins/
   memory/
     .claude-plugin/plugin.json
