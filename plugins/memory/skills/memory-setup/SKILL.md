@@ -75,7 +75,7 @@ Ask the user the following in one message:
 1. **Vault name** — will become `<name>-vault` on disk (e.g., `work` → `work-vault`)
 1. **Parent directory** — where to create the vault (default: `~/code`)
 1. **Git remote** — provide a URL now, or leave blank for local-only (you can add a remote later with `git remote add origin <URL>`)
-1. **Obsidian install** — if Obsidian was not found in Step 1, confirm whether to install it via `brew install --cask obsidian` (or skip and download manually)
+1. **Obsidian install** — if Obsidian was not found in Step 1 on macOS with Homebrew, confirm whether to install it via `brew install --cask obsidian`. On Linux or Windows, offer the manual download path until native install support is added.
 
 Echo the resolved plan as a short bullet list (vault path, remote or local-only, Obsidian action). Ask for a final go-ahead before continuing.
 
@@ -83,15 +83,17 @@ Echo the resolved plan as a short bullet list (vault path, remote or local-only,
 
 If Obsidian was detected in Step 1, skip this step.
 
-If Homebrew is available:
+If the user is on macOS and Homebrew is available, ask for approval and then run:
 
 ```bash
 brew install --cask obsidian
 ```
 
-If Homebrew is not available, print the download URL and continue without blocking:
+If Homebrew is not available, or the user is on Linux or Windows, print the download URL and continue without blocking:
 
 > Download: <https://obsidian.md/download> — install manually, then open the vault folder when prompted in Step 9.
+
+This workflow has been tested on macOS. Treat Linux and Windows paths as best-effort until contributors add and validate native install support.
 
 ## Step 4: Scaffold Vault
 

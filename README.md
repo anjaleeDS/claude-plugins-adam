@@ -4,6 +4,8 @@ Public Claude Code and Codex plugins for personal operating-system workflows.
 
 The first plugin in this repo is `memory`, a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions.
 
+Current support note: the setup flow has been tested on macOS. Linux and Windows compatibility reports and PRs are very welcome.
+
 ## Why I Made This
 
 I kept running into the same problem: AI sessions were useful in the moment, but the important parts were scattered across chats, local transcripts, repo state, and whatever I happened to remember later.
@@ -77,6 +79,8 @@ plugins/
 
 ## Development
 
+This repo is intentionally small, but the bar for changes is still: can someone else install it, understand what it writes, and recover cleanly if something goes wrong?
+
 Run the memory skill tests:
 
 ```bash
@@ -88,6 +92,19 @@ Validate the plugin metadata with the CLI available in your environment:
 ```bash
 claude plugin validate .
 ```
+
+## Contributing
+
+If this workflow is useful, please open an issue or PR. The most valuable feedback is concrete:
+
+- setup failures on a real machine
+- Linux or Windows compatibility fixes
+- missing preflight checks
+- unclear install instructions
+- unsafe or surprising writes
+- compatibility fixes for Claude Code, Codex, Antigravity, Obsidian, or git
+
+Small, focused PRs are welcome. Please include the command you ran, the environment you tested on, and whether `python3 -m pytest plugins/memory/skills/memory-setup/tests -q` passed.
 
 ## License
 

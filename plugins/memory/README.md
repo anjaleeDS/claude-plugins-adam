@@ -2,6 +2,8 @@
 
 `memory` is a portable skill for setting up a local, git-backed Obsidian vault that captures useful AI working-session notes instead of letting them disappear into chat history.
 
+Current support note: the setup flow has been tested on macOS. Linux and Windows compatibility reports and PRs are welcome.
+
 It includes:
 
 - `memory-setup` skill instructions for a gated, user-approved setup flow

@@ -330,16 +330,16 @@
       <div class="brand">Adam Blackwell</div>
       <nav aria-label="Article links">
         <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
-        <a href="#system">System diagram</a>
+        <a href="#system">Architecture sketch</a>
         <a href="#references">Influences</a>
       </nav>
     </div>
 
     <header class="hero">
       <section class="hero-copy">
-        <p class="eyebrow">Site reliability engineering · AI-assisted work · personal operating systems</p>
+        <p class="eyebrow">SRE management · operational memory · local-first AI tooling</p>
         <h1>Memory as reliability practice</h1>
-        <p class="dek">I built a local memory layer for AI work because repeated rediscovery is an operational smell. The same discipline that makes incidents learnable can make AI-assisted work compound.</p>
+        <p class="dek">I built this after noticing the same context tax over and over: a good AI session solved the immediate problem, but the useful residue did not make it into my operating system.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>SRE manager</div>
           <div class="meta-card"><strong>Artifact</strong><code>memory</code> plugin</div>
@@ -349,24 +349,24 @@
 
       <figure class="hero-visual">
         <img src="assets/memory-lattice.png" alt="Abstract lattice of notes, terminal lines, and connected memory nodes">
-        <figcaption class="caption">The feeling I wanted: decisions, traces, and context connected enough to be useful later.</figcaption>
+        <figcaption class="caption">The texture of what gets lost: command traces, decisions, names, half-finished threads, and the one sentence that would save twenty minutes next time.</figcaption>
       </figure>
     </header>
 
     <main>
       <article>
-        <p class="lead">SREs learn quickly that the incident is rarely the only problem. The harder problem is whether the organization remembers what the incident taught it.</p>
+        <p class="lead">After an incident, the fix is rarely enough. Someone has to preserve the lesson in a way the next responder can actually use.</p>
 
-        <p>That same pattern shows up in AI-assisted work. A session can be productive, even excellent, and still leave almost no durable residue. The assistant helped debug something, write something, compare trade-offs, or clarify a decision. Then the session ends. The next time, I pay the same orientation cost again.</p>
+        <p>That same pattern shows up in AI-assisted work. A session can be productive and still leave almost no durable residue. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision. Then the session ends. A week later, I remember that we figured it out, but not the exact shape of the answer.</p>
 
-        <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because our job is often continuity: knowing what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
+        <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because a lot of the job is continuity: what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
 
-        <div class="pullquote">The skill is not really about note-taking. It is about treating memory as part of the reliability surface.</div>
+        <div class="pullquote">This is not a note-taking project. It is a small reliability project for my own context.</div>
 
         <h2>Why I built it</h2>
-        <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want a mysterious cloud memory box. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
+        <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want an opaque memory feature that quietly shaped future sessions. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
 
-        <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity so the memory belongs to the operator, not a single assistant.</p>
+        <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
 
         <p>I have used this pattern in both work environments and personal environments. At work, it helps with incident follow-ups, architecture reviews, on-call handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
 
@@ -393,34 +393,34 @@
 
         <figure class="figure" id="system">
           <img src="assets/memory-system-diagram.svg" alt="System diagram showing AI work sessions moving through a gated setup skill into a Markdown vault and back into future context">
-          <figcaption class="caption">The memory loop is deliberately simple: capture useful residue, keep it inspectable, and retrieve it only when it helps.</figcaption>
+          <figcaption class="caption">The architecture is intentionally plain. Capture the residue, keep it inspectable, and bring it back only when it helps.</figcaption>
         </figure>
 
         <h2>Why this feels like SRE work</h2>
-        <p>Reliability is not just uptime. It is the discipline of making systems understandable under stress. Good runbooks, dashboards, postmortems, deploy notes, and handoffs all do the same thing: they reduce time-to-orientation when the next person needs to act.</p>
+        <p>Reliability is not just uptime. It is the discipline of making systems understandable when the easy context is gone. Good runbooks, dashboards, postmortems, deploy notes, and handoffs all do the same thing: they reduce time-to-orientation when the next person needs to act.</p>
 
-        <p>AI work now needs the same discipline. Agents are fast, but speed can make context loss worse. If the assistant helps me reason through a tricky production question and the output never becomes durable, the organization learned less than it could have. If a personal coaching session surfaces a repeated pattern and I never capture it, I am asking future-me to do the same discovery again.</p>
+        <p>AI work needs some of that discipline. Agents are fast, but speed can hide context loss. If the assistant helps me reason through a tricky production question and the output never becomes durable, the organization learned less than it could have. If a coaching session surfaces a repeated pattern and I never capture it, I am asking future-me to do the same discovery again.</p>
 
         <p>So I built the skill with reliability-manager guardrails. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
 
         <h2>Influences: visible machinery</h2>
-        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> and <a href="https://github.com/karpathy/llm.c">llm.c</a> make serious model machinery feel more legible. The through-line is the same instinct: build the thing end to end so you understand it.</p>
+        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> and <a href="https://github.com/karpathy/llm.c">llm.c</a> make serious model machinery feel more legible. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
 
         <p>This memory skill is not trying to build an LLM. It borrows that operating principle: make the important machinery visible enough that you can debug it, trust it, and change it.</p>
 
         <div class="note">
-          <p><strong>The bet:</strong> AI productivity will not just come from better prompts or bigger context windows. It will come from better continuity: context that compounds, remains owned by the person using it, and can be audited when it starts shaping future decisions.</p>
+          <p><strong>The practical test:</strong> if this is working, a future session should need less preamble, fewer repeated explanations, and fewer “wait, where did we decide that?” moments.</p>
         </div>
 
-        <h2>What I made public</h2>
-        <p>I pulled the skill out of its original private context and made a non-company-specific version called <code>memory</code>. The public repo keeps the mechanics and removes private assumptions: no company namespace, no private trackers, no internal database IDs, and no expectation that someone works in the same environment I do.</p>
+        <h2>Try it, inspect it, adapt it</h2>
+        <p>I published the <code>memory</code> plugin as a small, readable starting point for anyone who wants local AI-session memory without adopting a whole knowledge-management framework.</p>
 
-        <p>The public version is meant to be boring in the best way: readable, local-first, gated, and adaptable. Someone should be able to understand why it exists from the README, inspect exactly what it writes, and decide whether the workflow fits their own way of working.</p>
+        <p>The important pieces are plain files: Markdown templates, Python scripts, and explicit setup steps. Read the README, inspect the writes, and change the workflow until it fits your own environment.</p>
 
         <h2>What I want from it</h2>
-        <p>I want future sessions to start with better orientation. I want decisions to have a place to land. I want patterns from work and life to become easier to see across time. And I want the memory layer to remain mine: plain files, local defaults, clear writes, and enough structure to be useful without becoming a ceremony.</p>
+        <p>I want future sessions to start with better orientation. I want decisions to have a place to land. I want patterns from work and life to become easier to see across time. And I want the memory layer to remain mine: plain files, local defaults, clear writes, and enough structure to be useful without becoming ceremony.</p>
 
-        <p>That is the practical reason. The leadership reason is simpler: if AI is becoming part of how we think, build, and manage, then memory becomes part of the operating system. I would rather design that layer intentionally than inherit it accidentally.</p>
+        <p>That is the practical reason. The leadership reason is simpler: if AI is becoming part of how I think, build, and manage, I do not want the context layer to be accidental.</p>
       </article>
 
       <aside>
