@@ -1,0 +1,18 @@
+{
+  "name": "adzuci-plugins",
+  "owner": {
+    "name": "Adzuci"
+  },
+  "metadata": {
+    "description": "Public Claude Code skills and plugins for personal workflows."
+  },
+  "plugins": [
+    {
+      "name": "memory",
+      "source": "./plugins/memory",
+      "description": "Set up a local Obsidian-backed memory vault with session capture for Claude Code, Codex, and Antigravity.",
+      "category": "productivity",
+      "tags": ["claude-code", "codex", "memory", "obsidian"]
+    }
+  ]
+}

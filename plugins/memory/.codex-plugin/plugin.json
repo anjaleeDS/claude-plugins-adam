@@ -1,0 +1,15 @@
+{
+  "name": "memory",
+  "version": "0.1.0",
+  "description": "Set up a local Obsidian-backed memory vault with session capture for Claude Code, Codex, and Antigravity.",
+  "repository": "https://github.com/adzuci/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Memory",
+    "shortDescription": "Local session memory vault setup",
+    "developerName": "Adzuci",
+    "category": "Productivity",
+    "brandColor": "#2563EB"
+  }
+}

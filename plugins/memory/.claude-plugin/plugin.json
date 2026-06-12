@@ -1,0 +1,9 @@
+{
+  "name": "memory",
+  "displayName": "Memory",
+  "description": "Set up a local Obsidian-backed memory vault with session capture for Claude Code, Codex, and Antigravity.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Adam Blackwell"
+  }
+}
