@@ -235,6 +235,61 @@
 
     .lane li { margin: 8px 0; }
 
+    .install-block {
+      margin: 34px 0;
+      padding: 24px;
+      border: 1px solid #cad7e9;
+      border-radius: 8px;
+      background: #f6f9fd;
+    }
+
+    .install-block h2 {
+      margin-top: 0;
+    }
+
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .install-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 18px;
+    }
+
+    .install-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 0;
+      padding: 14px;
+      border-radius: 8px;
+      background: #111827;
+      color: #e5edf8;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    pre code {
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    .install-footnote {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .note {
       margin: 34px 0;
       padding: 22px;
@@ -291,18 +346,6 @@
       text-decoration: none;
     }
 
-    .repo {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 8px;
-      background: var(--night);
-      color: #dce5f5;
-    }
-
-    .repo h3 { color: #fff; }
-    .repo a { color: #9ec5ff; }
-    .repo code { background: rgba(255, 255, 255, 0.12); color: #fff; }
-
     footer {
       margin-top: 70px;
       padding-top: 24px;
@@ -318,7 +361,7 @@
       .hero, main { grid-template-columns: 1fr; }
       .hero { min-height: auto; }
       .hero-visual img { height: auto; }
-      .meta-grid, .two-lane { grid-template-columns: 1fr; }
+      .meta-grid, .two-lane, .install-grid { grid-template-columns: 1fr; }
       aside { position: static; }
       .side-panel { border-left: 0; border-top: 1px solid var(--line); padding: 24px 0 0; }
     }
@@ -330,6 +373,7 @@
       <div class="brand">Adam Blackwell</div>
       <nav aria-label="Article links">
         <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="#install">Install</a>
         <a href="#system">Architecture sketch</a>
         <a href="#references">Influences</a>
       </nav>
@@ -391,6 +435,11 @@
           </section>
         </div>
 
+        <h2>The part worth copying</h2>
+        <p>The exact folder names matter less than the operating pattern. Start each assistant from a small index. Keep raw session exhaust out of the default context path. Promote only the facts, decisions, references, and preferences that are likely to help later.</p>
+
+        <p>That gives the system a useful bias: capture can be broad, but memory should be curated. The skill exists to make that setup easy to inspect, easy to repeat, and hard to confuse with a magic black box.</p>
+
         <figure class="figure" id="system">
           <img src="assets/memory-system-diagram.svg" alt="System diagram showing AI work sessions moving through a gated setup skill into a Markdown vault and back into future context">
           <figcaption class="caption">The architecture is intentionally plain. Capture the residue, keep it inspectable, and bring it back only when it helps.</figcaption>
@@ -404,7 +453,7 @@
         <p>So I built the skill with reliability-manager guardrails. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
 
         <h2>Influences: visible machinery</h2>
-        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> and <a href="https://github.com/karpathy/llm.c">llm.c</a> make serious model machinery feel more legible. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
+        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> makes the training loop legible without burying the reader in platform machinery. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
 
         <p>This memory skill is not trying to build an LLM. It borrows that operating principle: make the important machinery visible enough that you can debug it, trust it, and change it.</p>
 
@@ -416,6 +465,26 @@
         <p>I published the <code>memory</code> plugin as a small, readable starting point for anyone who wants local AI-session memory without adopting a whole knowledge-management framework.</p>
 
         <p>The important pieces are plain files: Markdown templates, Python scripts, and explicit setup steps. Read the README, inspect the writes, and change the workflow until it fits your own environment.</p>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the public marketplace, install the <code>memory</code> plugin, then run the setup skill.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add memory@adzuci-plugins
+/memory:memory-setup</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install memory@adzuci-plugins
+/memory:memory-setup</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">The setup has been tested on macOS. Linux and Windows compatibility PRs are welcome.</p>
+        </section>
 
         <h2>What I want from it</h2>
         <p>I want future sessions to start with better orientation. I want decisions to have a place to land. I want patterns from work and life to become easier to see across time. And I want the memory layer to remain mine: plain files, local defaults, clear writes, and enough structure to be useful without becoming ceremony.</p>
@@ -440,16 +509,7 @@
             <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a>
             <a href="https://github.com/karpathy/micrograd">micrograd</a>
             <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a>
-            <a href="https://github.com/karpathy/llm.c">llm.c</a>
           </div>
-        </section>
-
-        <section class="repo">
-          <h3>Install shape</h3>
-          <p>The repo includes Claude and Codex marketplace metadata. The Codex install path is:</p>
-          <p><code>codex plugin marketplace add adzuci/claude-plugins</code></p>
-          <p><code>codex plugin add memory@adzuci-plugins</code></p>
-          <p>Claude Code uses the same marketplace, then <code>claude plugin install memory@adzuci-plugins</code>.</p>
         </section>
       </aside>
     </main>
