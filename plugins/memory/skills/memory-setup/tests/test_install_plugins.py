@@ -247,3 +247,18 @@ class TestInstallPluginSafety:
         assert result["status"] == "installed"
         assert (plugin_dir / "main.js").read_text() == "new"
         assert (plugin_dir / "data.json").read_text() == '{"setting":true}'
+
+    def test_skipped_complete_plugin_can_be_enabled(self, tmp_path) -> None:
+        vault = tmp_path / "vault"
+        plugin_dir = vault / ".obsidian" / "plugins" / "demo"
+        plugin_dir.mkdir(parents=True)
+        (plugin_dir / "manifest.json").write_text('{"id":"demo"}')
+        (plugin_dir / "main.js").write_text("main")
+
+        result = install_plugins.install_plugin("demo", "owner/repo", vault, None, False, False)
+        if result["status"] in {"installed", "skipped"}:
+            install_plugins.update_community_plugins(vault, ["demo"])
+
+        enabled = vault / ".obsidian" / "community-plugins.json"
+        assert result["status"] == "skipped"
+        assert "demo" in enabled.read_text()

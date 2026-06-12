@@ -98,3 +98,15 @@ def test_install_does_not_write_hook_when_settings_malformed(tmp_path) -> None:
     assert result["ok"] is False
     assert not (claude_dir / "hooks" / "session-end.sh").exists()
     assert (claude_dir / "settings.json.bak-123").exists()
+
+
+def test_install_shell_quotes_vault_path(tmp_path) -> None:
+    dangerous_vault = "/tmp/vault with $(danger) and 'quote'"
+
+    result = install_hook.install(vault=dangerous_vault, home=tmp_path, now=123)
+
+    hook = tmp_path / ".claude" / "hooks" / "session-end.sh"
+    text = hook.read_text()
+    assert result["ok"] is True
+    assert "VAULT='/tmp/vault with $(danger) and '\"'\"'quote'\"'\"''" in text
+    assert 'VAULT="/tmp/vault with $(danger)' not in text

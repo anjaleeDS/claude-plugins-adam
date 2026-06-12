@@ -12,7 +12,7 @@ if [ -n "${CLAUDE_SESSION_SUMMARY:-}" ]; then
   exit 0
 fi
 
-VAULT="{{VAULT}}"
+VAULT={{VAULT_SHELL}}
 SESSIONS_DIR="$VAULT/sessions"
 ARCHIVE_DIR="$HOME/.claude/transcripts"
 LOG="$HOME/.claude/hooks/session-summary.log"

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import sys
 import time
 from pathlib import Path
@@ -63,7 +64,7 @@ def install(vault: str, home: Path, now: int) -> dict:
     # --- Render hook script from template ---
     template_text = _TEMPLATE_PATH.read_text()
     try:
-        rendered = render_template(template_text, {"VAULT": vault})
+        rendered = render_template(template_text, {"VAULT_SHELL": shlex.quote(vault)})
     except ValueError as e:
         return {"ok": False, "error": f"Template rendering failed: {e}"}
 

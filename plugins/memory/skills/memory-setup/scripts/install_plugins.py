@@ -229,7 +229,7 @@ def main() -> None:
     }
 
     results = []
-    successfully_installed = []
+    successfully_available = []
 
     for plugin_id, repo in PLUGINS.items():
         result = install_plugin(
@@ -241,11 +241,11 @@ def main() -> None:
             force=args.force,
         )
         results.append(result)
-        if result.get("status") == "installed":
-            successfully_installed.append(plugin_id)
+        if result.get("status") in {"installed", "skipped"}:
+            successfully_available.append(plugin_id)
 
-    if successfully_installed and not args.dry_run:
-        update_community_plugins(vault, successfully_installed)
+    if successfully_available and not args.dry_run:
+        update_community_plugins(vault, successfully_available)
 
     summary = {
         "dry_run": args.dry_run,

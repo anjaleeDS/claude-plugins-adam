@@ -15,6 +15,24 @@ It includes:
 /memory:memory-setup
 ```
 
+## Install
+
+From Codex:
+
+```bash
+codex plugin marketplace add adzuci/claude-plugins
+codex plugin marketplace upgrade adzuci-plugins
+codex plugin add memory@adzuci-plugins
+```
+
+From Claude Code:
+
+```bash
+claude plugin marketplace add adzuci/claude-plugins
+claude plugin install memory@adzuci-plugins
+claude plugin enable memory
+```
+
 ## What It Installs
 
 The default Claude Code path sets up:
@@ -37,4 +55,3 @@ Re-running is designed to be safe:
 - Existing vault directories are not overwritten
 - `claude-mem` cleanup is dry-run by default
 - Session importers track already-ingested sessions
-

@@ -107,7 +107,7 @@ If the command exits nonzero (existing non-empty directory), **STOP** and ask th
 - **New name** — go back to Step 2 with a different name or parent
 - **Abort** — stop the installation
 
-Do not auto-push the initial commit. Tell the user: "Initial commit created. Push when ready: `git -C <vault> push -u origin main`"
+Do not auto-push. If `initial_commit` is true, tell the user: "Initial commit created. Push when ready: `git -C <vault> push -u origin main`". If `initial_commit` is false, tell the user the vault was scaffolded but the initial commit failed, show `initial_commit_error`, and suggest configuring git identity with `git config --global user.name` and `git config --global user.email` before rerunning `git -C <vault> commit --allow-empty -m "chore: initial vault scaffold"`.
 
 ## Step 5: Install Plugins
 

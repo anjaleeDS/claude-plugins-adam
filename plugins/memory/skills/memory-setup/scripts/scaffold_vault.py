@@ -102,6 +102,7 @@ def scaffold(name: str, parent: str, remote: str | None = None) -> dict:
         "vault": str(vault_path),
         "remote": remote or None,
         "initial_commit": commit_ok,
+        "initial_commit_error": err if not commit_ok else None,
     }
 
 

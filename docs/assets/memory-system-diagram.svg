@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">Memory setup system diagram</title>
+  <desc id="desc">A diagram showing AI work sessions flowing through a gated memory setup into a local Obsidian vault, then back into future work context.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="0.55" stop-color="#fffaf1"/>
+      <stop offset="1" stop-color="#f6fffb"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" x2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#172033" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M2 2 L10 7 L2 12" fill="none" stroke="#56627a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="820" rx="34" fill="url(#bg)"/>
+  <path d="M140 650 C330 560 420 705 610 614 C770 537 840 392 1004 456 C1134 507 1216 476 1290 398" fill="none" stroke="#d8e1ef" stroke-width="4"/>
+  <path d="M96 186 C262 96 361 139 512 202 C655 262 770 268 890 168 C1013 66 1170 66 1302 122" fill="none" stroke="#e7c873" stroke-width="3" opacity="0.55"/>
+
+  <text x="88" y="88" fill="#172033" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="34" font-weight="800">Personal memory loop for AI-assisted engineering</text>
+  <text x="88" y="130" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="19">Local-first, gated, inspectable continuity across work and personal environments.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="82" y="235" width="285" height="170" rx="22" fill="#ffffff" stroke="#d8deea"/>
+    <rect x="108" y="263" width="62" height="62" rx="16" fill="#eef4ff"/>
+    <path d="M124 296 h30 M124 310 h42 M124 282 h34" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+    <text x="108" y="352" fill="#172033" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="780">AI work session</text>
+    <text x="108" y="382" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">Debugging, reviews, planning,</text>
+    <text x="108" y="405" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">decisions, and messy context.</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="432" y="235" width="285" height="170" rx="22" fill="#ffffff" stroke="#d8deea"/>
+    <rect x="458" y="263" width="62" height="62" rx="16" fill="#f5f8ef"/>
+    <path d="M476 295 l12 13 l28 -33" fill="none" stroke="#0f766e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="458" y="352" fill="#172033" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="780">Gated setup skill</text>
+    <text x="458" y="382" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">Explain, preflight, ask, then</text>
+    <text x="458" y="405" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">write only after approval.</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="782" y="235" width="285" height="170" rx="22" fill="#ffffff" stroke="#d8deea"/>
+    <rect x="808" y="263" width="62" height="62" rx="16" fill="#fff6df"/>
+    <path d="M823 282 h34 v44 h-34 z M831 293 h18 M831 306 h24" fill="none" stroke="#b7791f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="808" y="352" fill="#172033" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="780">Markdown vault</text>
+    <text x="808" y="382" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">Obsidian plus git: readable,</text>
+    <text x="808" y="405" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">portable, and auditable.</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1132" y="235" width="185" height="170" rx="22" fill="#ffffff" stroke="#d8deea"/>
+    <rect x="1158" y="263" width="62" height="62" rx="16" fill="#fff0f3"/>
+    <path d="M1176 301 c13 -34 47 -28 37 4 c-6 19 -29 23 -43 8" fill="none" stroke="#be3455" stroke-width="6" stroke-linecap="round"/>
+    <text x="1158" y="352" fill="#172033" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="780">Future context</text>
+    <text x="1158" y="382" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">Less rediscovery.</text>
+    <text x="1158" y="405" fill="#5f6878" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="16">Better continuity.</text>
+  </g>
+
+  <path d="M377 320 H420" stroke="#56627a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M727 320 H770" stroke="#56627a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M1077 320 H1120" stroke="#56627a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="147" y="515" width="1106" height="150" rx="22" fill="#172033"/>
+    <text x="185" y="560" fill="#ffffff" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="800">Reliability-manager guardrails</text>
+    <text x="185" y="604" fill="#dce6f8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18">Permissioned writes</text>
+    <circle cx="168" cy="598" r="6" fill="#7dd3fc"/>
+    <text x="405" y="604" fill="#dce6f8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18">Plain-text recovery path</text>
+    <circle cx="388" cy="598" r="6" fill="#86efac"/>
+    <text x="685" y="604" fill="#dce6f8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18">Local ownership</text>
+    <circle cx="668" cy="598" r="6" fill="#fde68a"/>
+    <text x="895" y="604" fill="#dce6f8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18">Reusable learning</text>
+    <circle cx="878" cy="598" r="6" fill="#fda4af"/>
+    <text x="185" y="635" fill="#aebbd1" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15">The point is not a magical second brain. The point is an observable system that lowers re-orientation cost.</text>
+  </g>
+
+  <path d="M1226 418 C1226 722 224 722 224 420" fill="none" stroke="url(#blue)" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 14" marker-end="url(#arrow)" opacity="0.86"/>
+</svg>

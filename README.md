@@ -36,9 +36,23 @@ For Codex:
 
 ```bash
 codex plugin marketplace add adzuci/claude-plugins
+codex plugin marketplace upgrade adzuci-plugins
+codex plugin add memory@adzuci-plugins
 ```
 
-For Claude Code, add this repository as a plugin marketplace from the Claude Code plugin UI or CLI, then enable the `memory` plugin.
+For Claude Code:
+
+```bash
+claude plugin marketplace add adzuci/claude-plugins
+claude plugin install memory@adzuci-plugins
+claude plugin enable memory
+```
+
+Then invoke the setup skill:
+
+```text
+/memory:memory-setup
+```
 
 ## Repository Structure
 
