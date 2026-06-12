@@ -23,7 +23,6 @@ From Codex:
 
 ```bash
 codex plugin marketplace add adzuci/claude-plugins
-codex plugin marketplace upgrade adzuci-plugins
 codex plugin add memory@adzuci-plugins
 ```
 
@@ -32,7 +31,6 @@ From Claude Code:
 ```bash
 claude plugin marketplace add adzuci/claude-plugins
 claude plugin install memory@adzuci-plugins
-claude plugin enable memory
 ```
 
 ## What It Installs

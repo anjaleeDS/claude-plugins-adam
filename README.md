@@ -50,7 +50,6 @@ For Codex:
 
 ```bash
 codex plugin marketplace add adzuci/claude-plugins
-codex plugin marketplace upgrade adzuci-plugins
 codex plugin add memory@adzuci-plugins
 ```
 
@@ -59,7 +58,6 @@ For Claude Code:
 ```bash
 claude plugin marketplace add adzuci/claude-plugins
 claude plugin install memory@adzuci-plugins
-claude plugin enable memory
 ```
 
 Then invoke the setup skill:
