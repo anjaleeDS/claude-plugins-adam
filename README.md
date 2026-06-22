@@ -60,7 +60,9 @@ claude plugin marketplace add adzuci/claude-plugins
 claude plugin install memory@adzuci-plugins
 ```
 
-Then invoke the setup skill:
+Restart Claude CLI, then invoke the setup skill:
+
+<img width="377" height="499" alt="Screenshot 2026-06-22 at 1 16 56 PM" src="https://github.com/user-attachments/assets/f38149e3-1aef-4c74-9ea0-c42a245a47e9" />
 
 ```text
 /memory:memory-setup
