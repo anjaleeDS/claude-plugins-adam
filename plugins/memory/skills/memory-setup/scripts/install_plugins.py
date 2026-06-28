@@ -2,7 +2,7 @@
 install_plugins.py — Download and install Obsidian community plugins into a vault.
 
 Installs:
-  claudian  → YishenTu/claudian
+  realclaudian → YishenTu/claudian
   obsidian-git → Vinzent03/obsidian-git
 
 Usage:
@@ -23,7 +23,7 @@ from pathlib import Path
 from lib import merge_community_plugins, resolve_release_asset, validate_plugin_dir
 
 PLUGINS: dict[str, str] = {
-    "claudian": "YishenTu/claudian",
+    "realclaudian": "YishenTu/claudian",
     "obsidian-git": "Vinzent03/obsidian-git",
 }
 
@@ -216,7 +216,7 @@ def update_community_plugins(vault: Path, installed_ids: list) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Install Obsidian community plugins into a vault.")
     parser.add_argument("--vault", required=True, help="Path to the Obsidian vault.")
-    parser.add_argument("--pin-claudian", default=None, help="Pin claudian to a specific release tag.")
+    parser.add_argument("--pin-claudian", default=None, help="Pin realclaudian (YishenTu/claudian) to a specific release tag.")
     parser.add_argument("--pin-git", default=None, help="Pin obsidian-git to a specific release tag.")
     parser.add_argument("--dry-run", action="store_true", help="Print planned actions without downloading.")
     parser.add_argument("--force", action="store_true", help="Reinstall even if already present.")
@@ -224,7 +224,7 @@ def main() -> None:
 
     vault = Path(args.vault).expanduser()
     pins = {
-        "claudian": args.pin_claudian,
+        "realclaudian": args.pin_claudian,
         "obsidian-git": args.pin_git,
     }
 

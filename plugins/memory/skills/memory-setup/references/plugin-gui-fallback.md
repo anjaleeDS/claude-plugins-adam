@@ -23,7 +23,7 @@ After installation, each plugin's files are in:
   styles.css   (optional)
 ```
 
-Plugin IDs are `claudian` and `obsidian-git`.
+Plugin IDs are `realclaudian` and `obsidian-git`.
 
 The enabled plugin list is stored in:
 
