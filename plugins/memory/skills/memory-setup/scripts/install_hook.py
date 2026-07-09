@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import json
 import shlex
+import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -35,6 +37,22 @@ def _load_settings(path: Path) -> tuple[dict, bool]:
         return {}, True
 
 
+def _find_claude_bin() -> str:
+    """Return the absolute path to the claude binary, or 'claude' as fallback."""
+    # Prefer the binary that's actually on PATH right now (resolves NVM shims, etc.)
+    found = shutil.which("claude")
+    if found:
+        return str(Path(found).resolve())
+    # Try `which` via a login shell so NVM/pyenv/etc. are sourced
+    try:
+        out = subprocess.check_output(["bash", "-lc", "which claude"], text=True).strip()
+        if out:
+            return out
+    except Exception:
+        pass
+    return "claude"
+
+
 def install(vault: str, home: Path, now: int) -> dict:
     hooks_dir = home / ".claude" / "hooks"
     hook_script = hooks_dir / "session-end.sh"
@@ -48,7 +66,6 @@ def install(vault: str, home: Path, now: int) -> dict:
         bak = _backup_path(settings_path, now)
         backup_ok = True
         try:
-            import shutil
             shutil.copy2(str(settings_path), str(bak))
         except OSError as exc:
             backup_ok = False
@@ -62,9 +79,13 @@ def install(vault: str, home: Path, now: int) -> dict:
         }
 
     # --- Render hook script from template ---
+    claude_bin = _find_claude_bin()
     template_text = _TEMPLATE_PATH.read_text()
     try:
-        rendered = render_template(template_text, {"VAULT_SHELL": shlex.quote(vault)})
+        rendered = render_template(template_text, {
+            "VAULT_SHELL": shlex.quote(vault),
+            "CLAUDE_BIN": claude_bin,
+        })
     except ValueError as e:
         return {"ok": False, "error": f"Template rendering failed: {e}"}
 
@@ -76,7 +97,6 @@ def install(vault: str, home: Path, now: int) -> dict:
     # Backup settings before writing
     if settings_path.exists():
         bak = _backup_path(settings_path, now)
-        import shutil
         shutil.copy2(str(settings_path), str(bak))
     else:
         bak = None
@@ -94,6 +114,7 @@ def install(vault: str, home: Path, now: int) -> dict:
         "settings": str(settings_path),
         "settings_backup": str(bak) if bak else None,
         "vault": vault,
+        "claude_bin": claude_bin,
     }
 
 

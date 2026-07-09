@@ -29,6 +29,8 @@ Read `references/cost-benefit.md` and present a concise summary covering:
 - Anticipated token cost per substantive session (Claude Haiku summary ~1¢ warm / ~4¢ cold; Codex token line is free because it reads local JSONL; Antigravity local token totals are unavailable unless the installed version exposes them; vault reads are on-demand and bounded)
 - Why it is worth it vs the alternative (see cost-benefit.md for the full comparison)
 
+**Tip:** This setup works best in Auto mode, which lets Claude run all install steps without pausing for approval on each tool call. If you're not already in Auto mode, type `/auto` in the Claude Code prompt before selecting Proceed. You can disable it after setup with `/auto` again.
+
 Then ask for one of three choices: **Proceed**, **Explain more**, **Cancel**.
 
 Do nothing else until the user selects Proceed.
@@ -51,8 +53,10 @@ Render the results as a markdown table with columns: Item, Status. Rows:
 |------|--------|
 | macOS | yes / no |
 | Homebrew | found / missing |
+| Homebrew /usr/local/share/info writable | yes / no |
 | Obsidian | found / missing |
 | git | found / missing |
+| gh (GitHub CLI) | found / missing |
 | node | found / missing |
 | npm | found / missing |
 | claude (CLI) | found / missing |
@@ -63,6 +67,7 @@ Render the results as a markdown table with columns: Item, Status. Rows:
 | Antigravity brain | found / missing |
 | Antigravity hooks | found / missing |
 | Vault candidate | exists (non-empty) / clear / not checked |
+| Vault has .git | yes / no / not checked |
 | claude-mem | detected / not detected |
 | Unknown memory tooling | list names, or "none" |
 
@@ -74,22 +79,149 @@ Ask the user the following in one message:
 
 1. **Vault name** — will become `<name>-vault` on disk (e.g., `work` → `work-vault`)
 1. **Parent directory** — where to create the vault (default: `~/code`)
-1. **Git remote** — provide a URL now, or leave blank for local-only (you can add a remote later with `git remote add origin <URL>`)
-1. **Obsidian install** — if Obsidian was not found in Step 1 on macOS with Homebrew, confirm whether to install it via `brew install --cask obsidian`. On Linux or Windows, offer the manual download path until native install support is added.
+1. **Git remote** — choose one:
+   - **A) Create a private GitHub repo for me** (requires `gh` CLI — Claude will create `<name>-vault` on GitHub and set the HTTPS remote automatically)
+   - **B) I'll provide an existing URL** — paste your HTTPS or SSH remote URL
+   - **C) Local-only for now** — no remote; you can add one later with `git remote add origin <URL>`
 
-Echo the resolved plan as a short bullet list (vault path, remote or local-only, Obsidian action). Ask for a final go-ahead before continuing.
+   If the user picks A, Claude will create the repo in Step 2.5. Default to HTTPS remotes; only use SSH if the user explicitly provides an SSH URL (ssh:// or git@).
+1. **Obsidian install** — if Obsidian was not found in Step 1, confirm whether to install it automatically (macOS: direct DMG download from GitHub; Linux/Windows: manual download path).
+
+Echo the resolved plan as a short bullet list (vault path, remote choice, Obsidian action). Ask for a final go-ahead before continuing.
+
+## Step 2.5: Install Prerequisites (If Missing)
+
+Run this step only if `gh` or `jq` was reported missing in Step 1, or if the user selected option A in Step 2 (GitHub repo creation).
+
+### Fix Homebrew permission (if /usr/local/share/info not writable)
+
+If `brew_info_writable` is false and Homebrew is needed for anything, fix the permission first:
+
+```bash
+sudo chown -R $(whoami) /usr/local/share/info
+```
+
+Tell the user: "Run `! sudo chown -R $(whoami) /usr/local/share/info` in the terminal prompt to fix a Homebrew permission issue before continuing."
+
+### Install jq (if missing)
+
+Install `jq` directly from GitHub releases — do not use `brew` to avoid shallow-clone issues:
+
+```bash
+# Detect arch
+ARCH=$(uname -m)
+if [ "$ARCH" = "arm64" ]; then JQ_ASSET="jq-macos-arm64"; else JQ_ASSET="jq-macos-amd64"; fi
+
+# Get latest release download URL
+JQ_URL=$(curl -s https://api.github.com/repos/jqlang/jq/releases/latest \
+  | python3 -c "import sys,json; assets=[a for a in json.load(sys.stdin)['assets'] if a['name']=='$JQ_ASSET']; print(assets[0]['browser_download_url'])")
+
+# Download to /usr/local/bin/jq (or ~/.local/bin/jq if not writable)
+if [ -w /usr/local/bin ]; then
+  curl -L "$JQ_URL" -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq
+else
+  mkdir -p ~/.local/bin
+  curl -L "$JQ_URL" -o ~/.local/bin/jq && chmod +x ~/.local/bin/jq
+  echo "jq installed to ~/.local/bin/jq — add ~/.local/bin to your PATH if not already present"
+fi
+```
+
+### Install gh CLI (if missing)
+
+Install `gh` directly from GitHub releases — do not use `brew`:
+
+```bash
+# Detect arch
+ARCH=$(uname -m)
+if [ "$ARCH" = "arm64" ]; then GH_ARCH="arm64"; else GH_ARCH="amd64"; fi
+
+# Get latest version
+GH_VERSION=$(curl -s https://api.github.com/repos/cli/cli/releases/latest \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
+
+GH_ZIP="gh_${GH_VERSION}_macOS_${GH_ARCH}.zip"
+GH_URL="https://github.com/cli/cli/releases/download/v${GH_VERSION}/${GH_ZIP}"
+
+# Download and extract
+curl -L "$GH_URL" -o /tmp/gh.zip
+unzip -q /tmp/gh.zip -d /tmp/gh-extract
+
+# Install binary
+if [ -w /usr/local/bin ]; then
+  cp /tmp/gh-extract/gh_${GH_VERSION}_macOS_${GH_ARCH}/bin/gh /usr/local/bin/gh
+else
+  mkdir -p ~/.local/bin
+  cp /tmp/gh-extract/gh_${GH_VERSION}_macOS_${GH_ARCH}/bin/gh ~/.local/bin/gh
+  echo "gh installed to ~/.local/bin/gh — add ~/.local/bin to your PATH if not already present"
+fi
+rm -rf /tmp/gh.zip /tmp/gh-extract
+```
+
+After installing `gh`, authenticate:
+
+Tell the user: "Run `! gh auth login` in the terminal prompt and complete the browser flow, then come back and confirm."
+
+Wait for the user to confirm login succeeded before continuing.
+
+Then wire HTTPS credentials:
+
+```bash
+gh auth setup-git
+```
+
+### Create GitHub repo (if user chose option A in Step 2)
+
+After `gh auth setup-git`, create the private repo and capture the remote URL:
+
+```bash
+GH_USER=$(gh api user --jq .login)
+gh repo create ${GH_USER}/<name>-vault --private --description "Personal knowledge vault"
+REMOTE_URL="https://github.com/${GH_USER}/<name>-vault.git"
+```
+
+Use `$REMOTE_URL` as the `--remote` argument in Step 4.
 
 ## Step 3: Install Obsidian (If Missing)
 
 If Obsidian was detected in Step 1, skip this step.
 
-If the user is on macOS and Homebrew is available, ask for approval and then run:
+**Do NOT use `brew install --cask obsidian`.** Homebrew casks for Obsidian are frequently stale and the install fails due to SHA256 mismatches. Use the direct GitHub release download instead.
+
+### macOS: direct DMG install
+
+Ask for approval, then run:
 
 ```bash
-brew install --cask obsidian
+# Detect arch (Obsidian ships a universal DMG — this selects the right asset name)
+ARCH=$(uname -m)
+
+# Get latest release metadata
+OBSIDIAN_META=$(curl -s https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest)
+
+# Find the macOS DMG URL (the .dmg asset without AppImage/.apk/.exe suffix)
+OBSIDIAN_DMG_URL=$(echo "$OBSIDIAN_META" \
+  | python3 -c "
+import sys, json
+assets = json.load(sys.stdin)['assets']
+dmg = [a for a in assets if a['name'].endswith('.dmg') and not any(x in a['name'] for x in ['arm64','aarch64','AppImage','.apk','.exe'])]
+print(dmg[0]['browser_download_url'])
+")
+
+# Download
+curl -L "$OBSIDIAN_DMG_URL" -o /tmp/Obsidian.dmg
+
+# Mount, copy, unmount
+hdiutil attach /tmp/Obsidian.dmg -nobrowse -quiet
+cp -R /Volumes/Obsidian/Obsidian.app /Applications/
+hdiutil detach /Volumes/Obsidian -quiet
+rm /tmp/Obsidian.dmg
 ```
 
-If Homebrew is not available, or the user is on Linux or Windows, print the download URL and continue without blocking:
+If the mount point name differs from `/Volumes/Obsidian`, check `hdiutil attach` output for the actual mount path before copying.
+
+### Linux or Windows
+
+Print the download URL and continue without blocking:
 
 > Download: <https://obsidian.md/download> — install manually, then open the vault folder when prompted in Step 9.
 
@@ -105,9 +237,28 @@ The vault directory will be `<parent>/<name>-vault`.
 
 If the command exits nonzero (existing non-empty directory), **STOP** and ask the user:
 
-- **Reuse** — proceed with the existing directory as-is (skip scaffold, continue from Step 5)
+- **Reuse** — proceed with the existing directory as-is (skip scaffold, continue from Step 5). First ensure the directory has its own git repo:
+  ```bash
+  [ -d <vault>/.git ] || git init <vault>
+  ```
+  Check the `vault_has_git` field in the error JSON — if false, run `git init <vault>` before continuing.
 - **New name** — go back to Step 2 with a different name or parent
 - **Abort** — stop the installation
+
+If the scaffold output contains a `parent_repo_warning`, show it to the user so they know the vault lives inside another git repo and to double-check remotes.
+
+### Fix GitHub host key (safe to re-run)
+
+After git init and remote add, and before any push attempt, always run:
+
+```bash
+# Remove any stale github.com entry (GitHub rotated RSA key in March 2023)
+ssh-keygen -R github.com 2>/dev/null || true
+# Add the current ed25519 host key
+ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+```
+
+This prevents "REMOTE HOST IDENTIFICATION HAS CHANGED" errors on machines set up before March 2023.
 
 Do not auto-push. If `initial_commit` is true, tell the user: "Initial commit created. Push when ready: `git -C <vault> push -u origin main`". If `initial_commit` is false, tell the user the vault was scaffolded but the initial commit failed, show `initial_commit_error`, and suggest configuring git identity with `git config --global user.name` and `git config --global user.email` before rerunning `git -C <vault> commit --allow-empty -m "chore: initial vault scaffold"`.
 
@@ -119,7 +270,7 @@ python3 scripts/install_plugins.py --vault <vaultpath>
 
 This installs two community plugins:
 
-- `claudian` (YishenTu/claudian) — Claudian sidebar for vault-aware context
+- `realclaudian` (YishenTu/claudian) — Claudian sidebar for vault-aware context (plugin manifest ID is `realclaudian`)
 - `obsidian-git` (Vinzent03/obsidian-git) — Git sync from within Obsidian
 
 Optional flags: `--pin-claudian <TAG>` and `--pin-git <TAG>` to lock to specific release tags. `--dry-run` to preview without downloading.
@@ -242,7 +393,7 @@ Print the following verification checklist for the user to work through:
 - [ ] Shared vault exists at `<vault>` and has `index.md`
 - [ ] `VAULT` env variable in Claude hook script matches the vault path: check `~/.claude/hooks/session-end.sh` line 15 (Claude mode only)
 - [ ] `~/.claude/settings.json` has a `SessionEnd` entry with command `~/.claude/hooks/session-end.sh` (Claude mode only)
-- [ ] `<vault>/.obsidian/community-plugins.json` lists both `claudian` and `obsidian-git`
+- [ ] `<vault>/.obsidian/community-plugins.json` lists both `realclaudian` and `obsidian-git`
 - [ ] Open Obsidian → open the vault folder → trust and enable both plugins → confirm Claudian sidebar appears and Git commands are available in the command palette
 - [ ] Run a session/import for the selected client, then check `<vault>/sessions/<today>.md` — should contain a metadata stub and a client-tagged entry
 - [ ] `grep "memory-setup" ~/.claude/CLAUDE.md` returns the managed block (Claude mode only)

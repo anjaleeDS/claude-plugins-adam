@@ -128,7 +128,7 @@ nohup bash -c '
   cd /tmp || exit 0
   # Prompt is piped on stdin (not a positional arg) so a leading "---" is not
   # misread as a CLI flag.
-  SUMMARY=$(printf '%s' "$1" | CLAUDE_SESSION_SUMMARY=1 '"$(command -v claude)"' -p \
+  SUMMARY=$(printf '%s' "$1" | CLAUDE_SESSION_SUMMARY=1 '"{{CLAUDE_BIN}}"' -p \
     --model claude-haiku-4-5 \
     --append-system-prompt "'"$SYS"'" \
     --strict-mcp-config --mcp-config "{\"mcpServers\":{}}" \
