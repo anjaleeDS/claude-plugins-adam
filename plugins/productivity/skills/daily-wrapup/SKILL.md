@@ -113,7 +113,7 @@ If deep work is needed, suggest a specific block only when the calendar evidence
 
 Check your on-call schedule for today and tomorrow using whatever tool is available (PagerDuty CLI, Grafana OnCall, OpsGenie, etc.). Report:
 
-- Who is on call NAM and Asia/other regions if applicable
+- Who is on call in each of your org's on-call regions
 - Whether you are on call
 
 If you are on call today or tomorrow:
