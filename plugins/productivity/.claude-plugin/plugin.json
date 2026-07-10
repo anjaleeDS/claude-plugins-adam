@@ -1,0 +1,11 @@
+{
+  "name": "productivity",
+  "version": "0.1.0",
+  "description": "End-of-session and end-of-day workflows: session hygiene check, daily wrapup with goal capture, and Claude Code spend monitoring.",
+  "author": "adzuci",
+  "skills": [
+    "wrapup",
+    "daily-wrapup",
+    "budgetclaw-setup"
+  ]
+}

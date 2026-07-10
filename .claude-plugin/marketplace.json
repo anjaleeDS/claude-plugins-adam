@@ -20,6 +20,13 @@
       "description": "Job market intelligence sweep for senior technical candidates. Produces a tier-ranked report in your vault, runs an automated recruiter review, and offers weekly scheduling.",
       "category": "productivity",
       "tags": ["claude-code", "job-search", "career", "market-research"]
+    },
+    {
+      "name": "productivity",
+      "source": "./plugins/productivity",
+      "description": "End-of-session hygiene check, daily wrapup with Obsidian goal capture, and Claude Code spend monitoring with local macOS notifications.",
+      "category": "productivity",
+      "tags": ["claude-code", "daily-wrapup", "goals", "budgetclaw", "spend-monitoring"]
     }
   ]
 }
