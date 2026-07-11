@@ -1,6 +1,6 @@
 ---
 name: daily-wrapup
-description: Daily end-of-day wrapup and next-day planning. Reviews yesterday's goals, summarizes today, previews tomorrow's calendar, checks on-call, surfaces outstanding requests, and captures tomorrow's goals in your Obsidian vault.
+description: Daily end-of-day wrapup and next-day planning. Reviews yesterday's goals, summarizes today, previews tomorrow's calendar, optionally checks on-call, surfaces outstanding requests, and captures tomorrow's goals in your Obsidian vault.
 ---
 
 # Daily Wrapup
@@ -109,9 +109,11 @@ Summarize tomorrow's calendar in 2-5 bullets:
 
 If deep work is needed, suggest a specific block only when the calendar evidence supports it.
 
-### Step 6: Check On Call
+### Step 6: Check On Call (optional)
 
-Check your on-call schedule for today and tomorrow using whatever tool is available (PagerDuty CLI, Grafana OnCall, OpsGenie, etc.). Report:
+**Skip this step** if you are not on call, your org has no on-call rotation, or no on-call tool (PagerDuty CLI, Grafana OnCall, OpsGenie, etc.) is available. Mark it `skipped` in the source ledger and omit the on-call block from the output.
+
+If on-call tooling is available, check the schedule for today and tomorrow. Report:
 
 - Who is on call in each of your org's on-call regions
 - Whether you are on call
@@ -134,7 +136,7 @@ If on-call status cannot be determined, report `not verified`.
 Search bounded windows. Separate:
 
 - Team requests
-- Manager requests
+- Stakeholder requests
 - GitHub/Jira review requests
 
 Classify only actionable asks. Ignore FYIs, broad announcements, and already-closed loops. If a source was unavailable, say the request check is incomplete.
@@ -221,13 +223,13 @@ Today
 Tomorrow's calendar
 - ...
 
-On call
+On call (if applicable)
 - Today: ...
 - Tomorrow: ...
 
 Outstanding requests
 - Team: ...
-- Manager: ...
+- Stakeholders: ...
 - Reviews/Jira: ...
 
 Easy wins
