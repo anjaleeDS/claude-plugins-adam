@@ -16,8 +16,8 @@ Navigate 2-hop: `index.md` → `wiki/<topic>/index.md` → article
 
 - **memory/** — durables: `facts.md` (prefs, patterns), `projects.md`, `references.md`
 - **sessions/** — YYYY-MM-DD.md daily logs, auto-written by the SessionEnd hook (stub + Haiku AI summary)
+- **agents/** — agent definitions (job brief, tools, guardrails, linked skill path)
 - **raw/** — inbox (librarian agent files daily)
-- **incidents/** — issue reports and postmortems
 - **runbooks/** — repeatable procedures; drift templates to spot divergence from reality
 - **handoffs/** — handoff templates for open loops, risky changes, and active threads
 - **recipes/** — quick-reference command snippets (symptom → tool → command)

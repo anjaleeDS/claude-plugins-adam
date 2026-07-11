@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Memory as Reliability Practice</title>
-  <meta name="description" content="A site reliability engineering manager's note on building a local memory layer for AI-assisted work.">
+  <meta name="description" content="An infrastructure engineering manager's note on building a local memory layer for AI-assisted work.">
   <style>
     :root {
       color-scheme: light;
@@ -390,11 +390,11 @@
 
     <header class="hero">
       <section class="hero-copy">
-        <p class="eyebrow">SRE management · operational memory · local-first AI tooling</p>
+        <p class="eyebrow">Engineering leadership · operational memory · local-first AI tooling</p>
         <h1>Memory as reliability practice</h1>
         <p class="dek">I built this after noticing the same context tax over and over: a good AI session solved the immediate problem, but the useful residue did not make it into my operating system.</p>
         <div class="meta-grid" aria-label="Article metadata">
-          <div class="meta-card"><strong>Role lens</strong>SRE manager</div>
+          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
           <div class="meta-card"><strong>Artifact</strong><code>memory</code> plugin</div>
           <div class="meta-card"><strong>Scope</strong>Work and personal systems</div>
         </div>
@@ -408,27 +408,27 @@
 
     <main>
       <article>
-        <p class="lead">After an incident, the fix is rarely enough. Someone has to preserve the lesson in a way the next responder can actually use.</p>
+        <p class="lead">When a hard problem finally gets solved, the fix is rarely enough. Someone has to preserve the lesson in a way the next person can actually use.</p>
 
         <p>That same pattern shows up in AI-assisted work. A session can be productive and still leave almost no durable residue. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision. Then the session ends. A week later, I remember that we figured it out, but not the exact shape of the answer.</p>
 
         <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because a lot of the job is continuity: what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
 
-        <div class="pullquote">This is not a note-taking project. It is a small reliability project for my own context.</div>
+        <div class="pullquote">This is not a note-taking project. It is a small project for keeping my own context reliable.</div>
 
         <h2>Why I built it</h2>
         <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want an opaque memory feature that quietly shaped future sessions. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
 
         <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
 
-        <p>I have used this pattern in both work environments and personal environments. At work, it helps with incident follow-ups, architecture reviews, on-call handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
+        <p>I have used this pattern in both work environments and personal environments. At work, it helps with project follow-ups, architecture reviews, team handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
 
         <div class="two-lane" aria-label="Work and personal memory examples">
           <section class="lane">
             <h3>Work memory</h3>
             <ul>
-              <li>Incident context and postmortem follow-ups</li>
-              <li>On-call handoffs and production-risk notes</li>
+              <li>Debugging context and follow-ups after hard problems</li>
+              <li>Handoffs and open-risk notes</li>
               <li>Architecture decisions and review patterns</li>
               <li>Team conventions that should not live only in chat</li>
             </ul>
@@ -454,12 +454,12 @@
           <figcaption class="caption">The architecture is intentionally plain. Capture the residue, keep it inspectable, and bring it back only when it helps.</figcaption>
         </figure>
 
-        <h2>Why this feels like SRE work</h2>
-        <p>Reliability is not just uptime. It is the discipline of making systems understandable when the easy context is gone. Good runbooks, dashboards, postmortems, deploy notes, and handoffs all do the same thing: they reduce time-to-orientation when the next person needs to act.</p>
+        <h2>Why continuity is worth engineering</h2>
+        <p>Continuity is not just about uptime. It is the discipline of making work understandable when the easy context is gone. Good notes, docs, decision records, and handoffs all do the same thing: they reduce the time it takes the next person to get oriented and act.</p>
 
         <p>AI work needs some of that discipline. Agents are fast, but speed can hide context loss. If the assistant helps me reason through a tricky production question and the output never becomes durable, the organization learned less than it could have. If a coaching session surfaces a repeated pattern and I never capture it, I am asking future-me to do the same discovery again.</p>
 
-        <p>So I built the skill with reliability-manager guardrails. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
+        <p>So I built the skill with the same guardrails I would want on any system I trust. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
 
         <h2>Influences: visible machinery</h2>
         <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> makes the training loop legible without burying the reader in platform machinery. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
