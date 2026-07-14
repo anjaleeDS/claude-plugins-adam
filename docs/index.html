@@ -421,6 +421,8 @@
 
         <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
 
+        <p>Two optional layers round it out. Scheduled sync keeps the vault converged across machines — obsidian-git handles it while Obsidian is open, and a launchd agent pulls, commits, and pushes headlessly the rest of the time. And invoking the skill with the <code>crypt</code> argument encrypts the sensitive directories (coaching notes, session logs, meeting notes) with git-crypt, so the remote only ever sees ciphertext while everything stays plain Markdown on disk; the key lives in your password manager, and a second machine unlocks with one command.</p>
+
         <p>I have used this pattern in both work environments and personal environments. At work, it helps with project follow-ups, architecture reviews, team handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
 
         <div class="two-lane" aria-label="Work and personal memory examples">
