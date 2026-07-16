@@ -71,6 +71,9 @@ def test_install_darwin_writes_script_plist_and_data_json(tmp_path: Path) -> Non
     assert merged["autoSaveInterval"] == 10
     assert (data_json.parent / "data.json.bak-1234").exists()
 
+    # The overwritten keys are declared in the output
+    assert result["enforced_settings"] == sorted(install_sync.OBSIDIAN_GIT_SYNC_SETTINGS)
+
 
 def test_install_non_darwin_suggests_cron(tmp_path: Path) -> None:
     vault = _make_vault(tmp_path)

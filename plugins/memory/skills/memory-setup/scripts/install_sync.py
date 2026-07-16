@@ -135,6 +135,9 @@ def run(
 
     # 1. obsidian-git settings
     result["obsidian_git"] = _write_obsidian_git_settings(vault, now)
+    # These keys are re-enforced on every run (manual edits to them are
+    # overwritten; everything else in data.json is preserved).
+    result["enforced_settings"] = sorted(OBSIDIAN_GIT_SYNC_SETTINGS)
 
     # 2. Headless sync script
     import shlex

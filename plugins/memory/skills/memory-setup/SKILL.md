@@ -275,9 +275,7 @@ Do not auto-push. If `initial_commit` is true, tell the user: "Initial commit cr
 
 ## Step 4.5: Encryption (`crypt` Argument Only — Gate)
 
-Skip this step unless the skill was invoked with the `crypt` argument. Read `references/encryption.md` first. Keep every user-facing message here to a few short lines — this flow is designed to take the user at most two interactions.
-
-If git-crypt is missing (Step 1), install it first: `brew install git-crypt` (macOS).
+Skip this step unless the skill was invoked with the `crypt` argument. Read `references/encryption.md` first. Keep every user-facing message here to a few short lines — this flow takes the user at most two interactions. If git-crypt is missing (Step 1), install it first: `brew install git-crypt` (macOS).
 
 1. **Detect and gate.** Run the dry-run and show a 3-line summary — detected mode (`fresh` / `migrate` / `unlock` / `noop`), the dirs to be encrypted, and (migrate only) the caveat that older commits keep plaintext:
 
@@ -285,32 +283,13 @@ If git-crypt is missing (Step 1), install it first: `brew install git-crypt` (ma
    python3 scripts/setup_crypt.py --vault <vaultpath>
    ```
 
-   Ask **Proceed** / **Cancel**. On `noop`, say encryption is already active and continue to the next step.
+   Ask **Proceed** / **Cancel**. On `noop`, say encryption is already active and continue.
 
-2. **Apply.**
+2. **Apply** — `python3 scripts/setup_crypt.py --vault <vaultpath> --apply`, then hand off the key (`key_out` in the JSON; surface `key_location_warning` if present). If `op` (1Password CLI) was found in Step 1, offer `op document create <key_out> --title "<name>-vault git-crypt key"`; otherwise tell the user: "Save `<key_out>` in 1Password (or your password manager) as a document — it's the only way to read the encrypted files." Once the user confirms it's saved, `rm <key_out>`. Do not proceed until confirmed.
 
-   - **fresh / migrate:**
+   For **unlock** (second machine): ask the user to download the key from their password manager to a temporary path, then `python3 scripts/setup_crypt.py --vault <vaultpath> --unlock <keyfile> --apply && rm <keyfile>`.
 
-     ```bash
-     python3 scripts/setup_crypt.py --vault <vaultpath> --apply
-     ```
-
-     Then hand off the key (`key_out` in the JSON). If `op` (1Password CLI) was found in Step 1, offer to store it automatically:
-
-     ```bash
-     op document create <key_out> --title "<name>-vault git-crypt key"
-     ```
-
-     Otherwise tell the user: "Save `<key_out>` in 1Password (or your password manager) as a document — it's the only way to read the encrypted files." Once the user confirms it's saved, delete the local copy: `rm <key_out>`. Do not proceed until confirmed.
-
-   - **unlock (second machine):** ask the user to download the key from their password manager to a temporary path, then:
-
-     ```bash
-     python3 scripts/setup_crypt.py --vault <vaultpath> --unlock <keyfile> --apply
-     rm <keyfile>
-     ```
-
-3. **Verify:** `git -C <vaultpath> crypt status | head` shows `encrypted:` for the sensitive dirs. Do not auto-push; the existing push guidance from Step 4 applies.
+3. **Verify:** `git -C <vaultpath> crypt status | head` shows `encrypted:` for the sensitive dirs. Do not auto-push; the push guidance from Step 4 applies.
 
 ## Step 5: Install Plugins
 
@@ -337,7 +316,7 @@ python3 scripts/install_sync.py --vault <vaultpath> --interval <seconds>
 
 This configures both sync layers:
 
-- **obsidian-git settings** (`<vault>/.obsidian/plugins/obsidian-git/data.json`, backed up first) — auto commit/pull every 10 minutes while Obsidian is open.
+- **obsidian-git settings** (`<vault>/.obsidian/plugins/obsidian-git/data.json`, backed up first) — auto commit/pull every 10 minutes while Obsidian is open. Note: re-running re-enforces the sync keys listed in the JSON output (`enforced_settings`), overwriting manual changes to those specific keys; all other settings are preserved.
 - **launchd agent** (macOS) — `~/.claude/hooks/vault-sync.sh` on the chosen interval, covering headless writes like the SessionEnd hook. The script is safe by construction: it skips when there's no remote, when a rebase/merge is in progress, or when a git-crypt checkout is locked. On Linux/Windows the JSON output includes a `cron_line` to add with `crontab -e` instead.
 
 Requires a git remote to be useful — if the user chose local-only in Step 2, note that sync will silently no-op until they add a remote. Rollback: `python3 scripts/install_sync.py --uninstall`.
@@ -518,7 +497,7 @@ The scheduled-sync step may also write to:
 Setting up a second machine against an existing encrypted vault:
 
 1. Install the plugin, then run `/memory:memory-setup crypt`.
-2. In Step 2, choose **B** and give the existing remote URL; when Step 4's scaffold reports the directory conflict, clone instead: `git clone <remote> <vault>`.
+2. In Step 2, choose **B** and give the existing remote URL. **Skip Step 4's scaffold entirely** — on a machine where the vault path doesn't exist yet, scaffolding would create a fresh empty vault instead of erroring. Clone instead: `git clone <remote> <vault>`.
 3. Step 4.5 detects `unlock` mode — download the key from your password manager, unlock, delete the key file.
 4. Continue with Steps 5–7 (plugins, hook) and 5.5 (sync) as normal. The scheduled sync keeps both machines converged via pull-rebase/commit/push.
 

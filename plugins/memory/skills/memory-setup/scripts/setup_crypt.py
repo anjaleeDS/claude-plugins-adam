@@ -190,6 +190,22 @@ def run(
         }
 
     mode = detect_mode(vault, paths)
+
+    # The default key location is the vault's parent dir. If that dir is
+    # itself inside a git work tree, the exported key could be committed by
+    # that repo — warn so the caller surfaces it (the key must be deleted
+    # after the password-manager handoff either way).
+    key_location_warning = None
+    key_dir = key_out.parent
+    if mode in ("fresh", "migrate") and key_dir.is_dir():
+        ok, top, _ = _run(["git", "rev-parse", "--show-toplevel"], key_dir)
+        if ok and top:
+            key_location_warning = (
+                f"Key export location {key_dir} is inside a git repo at "
+                f"'{top}' — make sure the key file is never committed there; "
+                "delete it right after saving to your password manager."
+            )
+
     result: dict = {
         "ok": True,
         "dry_run": not apply,
@@ -200,6 +216,8 @@ def run(
         "history_warning": mode == "migrate",
         "actions": [],
     }
+    if key_location_warning:
+        result["key_location_warning"] = key_location_warning
 
     if mode == "noop":
         result["note"] = "git-crypt already configured and unlocked; nothing to do."

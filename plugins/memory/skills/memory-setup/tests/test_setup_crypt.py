@@ -143,6 +143,28 @@ def test_dry_run_makes_no_changes(tmp_path: Path) -> None:
     assert not key.exists()
 
 
+def test_key_location_warning_when_key_dir_is_a_git_repo(tmp_path: Path) -> None:
+    outer = tmp_path / "outer-repo"
+    outer.mkdir()
+    _git(outer, "init", "-q")
+    vault = _make_repo(outer, "nested-vault")
+    _commit_file(vault, "index.md", "# index")
+
+    result = setup_crypt.run(
+        vault=vault, paths=["memory"], key_out=outer / "k.key",
+        apply=False, which=lambda name: "/usr/bin/git-crypt",
+    )
+    assert result["ok"] is True
+    assert "inside a git repo" in result["key_location_warning"]
+
+    # No warning when the key dir is not inside any git work tree.
+    clean = setup_crypt.run(
+        vault=vault, paths=["memory"], key_out=tmp_path / "elsewhere" / "k.key",
+        apply=False, which=lambda name: "/usr/bin/git-crypt",
+    )
+    assert "key_location_warning" not in clean
+
+
 def test_unlock_mode_requires_keyfile(tmp_path: Path) -> None:
     vault = _make_repo(tmp_path)
     _commit_file(vault, ".gitattributes", "memory/** filter=git-crypt diff=git-crypt\n")
