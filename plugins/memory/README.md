@@ -66,7 +66,14 @@ Re-running is designed to be safe:
 - Hook registration is idempotent
 - `CLAUDE.md` updates replace one managed block
 - Existing vault directories are not overwritten
-- `claude-mem` cleanup is dry-run by default
 - Session importers track already-ingested sessions
 - git-crypt setup is dry-run by default, never exports the key inside the vault, and never prints key material
 - Scheduled sync skips locked git-crypt checkouts and in-progress rebases, and `--uninstall` removes everything it installed
+
+## History
+
+An early version of this workflow used `claude-mem` for about a week in April
+2026. It was replaced by the explicit `SessionEnd` capture flow described here,
+which keeps the generated notes and write path visible. The setup skill retains
+dry-run detection and cleanup support so existing `claude-mem` users can migrate
+without silently changing their configuration.
