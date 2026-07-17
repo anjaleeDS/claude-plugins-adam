@@ -1,14 +1,8 @@
 {
   "name": "productivity",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local productivity workflows for session hygiene, daily wrapup, spend monitoring, agent scaffolding, and privacy-safe scheduled-agent operations.",
-  "author": "adzuci",
-  "skills": [
-    "wrapup",
-    "daily-wrapup",
-    "budgetclaw-setup",
-    "create-agent",
-    "agent-ops-setup",
-    "agent-ops-report"
-  ]
+  "author": {
+    "name": "adzuci"
+  }
 }

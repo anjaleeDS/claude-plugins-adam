@@ -1,6 +1,7 @@
 ---
 name: agent-ops-setup
 description: Initialize private, local operational tracking for scheduled AI agents. Use when discovering or registering Codex, Claude, launchd, or other schedule definitions; creating an append-only run ledger; or choosing an Obsidian-compatible summary destination without copying schedule contents or secrets.
+disable-model-invocation: true
 ---
 
 # Agent Ops Setup
@@ -10,8 +11,8 @@ Create a local agent inventory, append-only JSONL run ledger, and Markdown summa
 ## Initialize tracking
 
 1. Ask for the tracking root when the user has a preference. Otherwise use `$AGENT_OPS_HOME` or `~/.local/share/agent-ops`.
-2. Accept schedule files or directories with repeated `--schedule`. Add `--discover` only when the user wants safe discovery of common local schedule locations.
-3. Run:
+1. Accept schedule files or directories with repeated `--schedule`. Add `--discover` only when the user wants safe discovery of common local schedule locations.
+1. Run:
 
 ```bash
 python3 scripts/agent_ops_setup.py init \

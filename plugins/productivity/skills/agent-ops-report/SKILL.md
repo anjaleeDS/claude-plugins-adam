@@ -1,6 +1,7 @@
 ---
 name: agent-ops-report
 description: Generate privacy-safe operational reports from agent run ledgers and local Codex or Claude JSONL/session artifacts. Use when reviewing per-run status, measured duration and tokens, source coverage, unavailable fields, or scheduled-agent reliability without exposing prompts, responses, repository paths, or company-specific data.
+disable-model-invocation: true
 ---
 
 # Agent Ops Report
