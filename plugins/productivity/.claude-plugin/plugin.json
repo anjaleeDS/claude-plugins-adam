@@ -1,12 +1,14 @@
 {
   "name": "productivity",
   "version": "0.1.0",
-  "description": "End-of-session and end-of-day workflows: session hygiene check, daily wrapup with goal capture, Claude Code spend monitoring, and guided agent scaffolding.",
+  "description": "Local productivity workflows for session hygiene, daily wrapup, spend monitoring, agent scaffolding, and privacy-safe scheduled-agent operations.",
   "author": "adzuci",
   "skills": [
     "wrapup",
     "daily-wrapup",
     "budgetclaw-setup",
-    "create-agent"
+    "create-agent",
+    "agent-ops-setup",
+    "agent-ops-report"
   ]
 }

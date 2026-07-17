@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Ops Report"
+  short_description: "Summarize measured agent run health"
+  default_prompt: "Use $agent-ops-report to summarize recent agent runs and identify unavailable metrics."
