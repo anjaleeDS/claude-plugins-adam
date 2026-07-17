@@ -34,12 +34,21 @@ jobs:
           PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache" \
             python -m compileall -q \
               plugins/memory/skills/memory-setup/scripts \
-              plugins/memory/skills/memory-setup/tests
+              plugins/memory/skills/memory-setup/tests \
+              plugins/productivity/skills/agent-ops-setup/scripts \
+              plugins/productivity/skills/agent-ops-setup/tests \
+              plugins/productivity/skills/agent-ops-report/scripts \
+              plugins/productivity/skills/agent-ops-report/tests
 
       - name: Run memory setup tests
         run: |
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/memory/skills/memory-setup/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest \
+              plugins/productivity/skills/agent-ops-setup/tests \
+              plugins/productivity/skills/agent-ops-report/tests \
+              -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |
