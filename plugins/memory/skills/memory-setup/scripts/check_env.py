@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import shutil
 import subprocess
@@ -61,16 +62,16 @@ def detect_path(path_str: str, kind: str = "any") -> bool:
     return p.exists()
 
 
-def detect_vault_candidate(path_str: str) -> bool:
-    """Return True if the candidate path already exists (and is non-empty)."""
+def detect_vault_candidate(path_str: str) -> dict | bool:
+    """Return a dict with vault state when path_str is given, else False."""
     if not path_str:
         return False
     p = Path(path_str).expanduser()
     if not p.exists():
-        return False
-    if p.is_dir():
-        return any(True for _ in p.iterdir())
-    return True
+        return {"exists": False, "non_empty": False, "vault_has_git": False}
+    non_empty = p.is_dir() and any(True for _ in p.iterdir())
+    vault_has_git = (p / ".git").exists()
+    return {"exists": True, "non_empty": non_empty, "vault_has_git": vault_has_git}
 
 
 def build_report(vault_candidate: str = "") -> dict:
@@ -83,18 +84,24 @@ def build_report(vault_candidate: str = "") -> dict:
     claude_on_path = detect_which("claude")
     codex_on_path = detect_which("codex")
     jq = detect_which("jq")
-    vault_exists = detect_vault_candidate(vault_candidate) if vault_candidate else None
+    gh = detect_which("gh")
+    brew_info_writable = os.access("/usr/local/share/info", os.W_OK)
+    vault_info = detect_vault_candidate(vault_candidate) if vault_candidate else None
 
     report: dict = {
         "macos": is_mac,
         "brew": brew,
+        "brew_info_writable": brew_info_writable,
         "obsidian": obsidian,
         "git": git,
+        "gh": gh,
         "node": node,
         "npm": npm,
         "claude": claude_on_path,
         "codex": codex_on_path,
         "jq": jq,
+        "git_crypt": detect_which("git-crypt"),
+        "op": detect_which("op"),
         "codex_sessions": detect_path("~/.codex/sessions", "dir"),
         "codex_session_index": detect_path("~/.codex/session_index.jsonl", "file"),
         "codex_config": detect_path("~/.codex/config.toml", "file"),
@@ -104,7 +111,11 @@ def build_report(vault_candidate: str = "") -> dict:
     }
     if vault_candidate:
         report["vault_candidate"] = vault_candidate
-        report["vault_exists"] = vault_exists
+        if isinstance(vault_info, dict):
+            report["vault_exists"] = vault_info["non_empty"]
+            report["vault_has_git"] = vault_info["vault_has_git"]
+        else:
+            report["vault_exists"] = vault_info
 
     return report
 

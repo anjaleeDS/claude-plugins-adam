@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Ops Setup"
+  short_description: "Create a private local agent run ledger"
+  default_prompt: "Use $agent-ops-setup to initialize private local tracking for my scheduled agents."

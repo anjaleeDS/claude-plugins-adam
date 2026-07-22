@@ -12,8 +12,9 @@ Navigate 2-hop: `index.md` → `wiki/<topic>/index.md` → article
 
 - **memory/** — durables (facts, projects, references)
 - **sessions/** — daily logs written by client hooks or importers; see `sessions/YYYY-MM-DD.md`
+- **agents/** — agent definitions with job brief, tools, guardrails, and linked skill path
 - **raw/** — inbox; librarian agent files daily
-- **incidents/**, **runbooks/**, **handoffs/**, **recipes/** — operational templates and quick reference
+- **runbooks/**, **handoffs/**, **recipes/** — repeatable procedures and quick reference
 - **wiki/** — topic-organized articles
 
 ## Rules

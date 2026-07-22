@@ -45,12 +45,30 @@ def scaffold(name: str, parent: str, remote: str | None = None) -> dict:
         except Exception:
             children = []
         if children:
+            vault_has_git = (vault_path / ".git").is_dir()
             return {
                 "ok": False,
                 "error": f"Vault directory '{vault_path}' already exists and is not empty. "
                          "Please choose a different name or parent, or remove the existing directory.",
                 "vault": str(vault_path),
+                "vault_has_git": vault_has_git,
             }
+
+    # Detect if vault_path is nested inside a foreign git repo.
+    # For a new vault, git init below creates a dedicated repo — that's fine.
+    # We still warn so the caller (and SKILL.md) can handle edge cases.
+    _parent_repo: str | None = None
+    if vault_path.exists():
+        ok, out, _ = _run(["git", "rev-parse", "--show-toplevel"], cwd=vault_path)
+        if ok and out and out != str(vault_path):
+            _parent_repo = out
+    else:
+        # Path doesn't exist yet; check parent dir
+        check_dir = vault_path.parent if vault_path.parent.exists() else None
+        if check_dir:
+            ok, out, _ = _run(["git", "rev-parse", "--show-toplevel"], cwd=check_dir)
+            if ok and out:
+                _parent_repo = out
 
     # Locate templates/vault/ relative to this script
     skill_dir = Path(__file__).resolve().parent.parent
@@ -97,13 +115,20 @@ def scaffold(name: str, parent: str, remote: str | None = None) -> dict:
     )
     commit_ok = ok
 
-    return {
+    result: dict = {
         "ok": True,
         "vault": str(vault_path),
         "remote": remote or None,
         "initial_commit": commit_ok,
         "initial_commit_error": err if not commit_ok else None,
     }
+    if _parent_repo:
+        result["parent_repo_warning"] = (
+            f"Vault is nested inside an existing git repo at '{_parent_repo}'. "
+            "A fresh 'git init' was run inside the vault so it has its own repo — "
+            "verify with 'git -C <vault> remote -v' before pushing."
+        )
+    return result
 
 
 def main() -> None:
